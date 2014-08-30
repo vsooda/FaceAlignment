@@ -26,6 +26,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
 #include "FaceAlignment.h"
+#include <string>
 
 int main(){
     vector<Mat_<uchar> > test_images;
@@ -37,8 +38,17 @@ int main(){
 
     for(int i = 0;i < test_img_num;i++){
         string image_name = "./../../CRP/rcpr_v2/data/testImages/";
-        image_name = image_name + to_string(i+1) + ".jpg";
+        char ichar[10];
+        sprintf(ichar, "%d", i+1);
+        string istring(ichar);
+        image_name = image_name + istring + ".jpg";
+        //image_name = image_name + to_string(i+1) + ".jpg";
+        cout << image_name << endl;
         Mat_<uchar> temp = imread(image_name,0);
+        if(temp.data == NULL) {
+            cout << "read wront" << endl;
+            exit(1);
+        }
         test_images.push_back(temp);
     }
     fin.open("./../../CRP/rcpr_v2/data/boundingbox_test.txt");
@@ -53,10 +63,12 @@ int main(){
     
     ShapeRegressor regressor;
     regressor.Load("./data/model.txt");
+    int index = 0;
     while(true){
-        int index = 1;
-        cout<<"Input index:"<<endl;
-        cin>>index;
+        //int index = 1;
+        //cout<<"Input index:"<<endl;
+        //cin>>index;
+        index++;
 
         Mat_<double> current_shape = regressor.Predict(test_images[index],test_bounding_box[index],initial_number);
         Mat test_image_1 = test_images[index].clone();
@@ -64,6 +76,7 @@ int main(){
             circle(test_image_1,Point2d(current_shape(i,0),current_shape(i,1)),3,Scalar(255,0,0),-1,8,0);
         }
         imshow("result",test_image_1);
+        waitKey();
     }
     return 0;
 }

@@ -26,6 +26,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
 #include "FaceAlignment.h"
+#include <string>
 
 int main(){
     int img_num = 1345;
@@ -41,7 +42,11 @@ int main(){
     cout<<"Read images..."<<endl;
     for(int i = 0;i < img_num;i++){
         string image_name = "./../../CRP/rcpr_v2/data/trainingImages/";
-        image_name = image_name + to_string(i+1) + ".jpg";
+        char ichar[10];
+        sprintf(ichar, "%d", i+1);
+        string istring(ichar);
+        //image_name = image_name + to_string(i+1) + ".jpg";
+        image_name = image_name + istring + ".jpg";
         Mat_<uchar> temp = imread(image_name,0);
         images.push_back(temp);
     }
